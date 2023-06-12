@@ -11,17 +11,17 @@ exports.handler = async (event) => {
 
   const id = randomUUID();
 
-  const response = await dynamodb
+  await dynamodb
     .putItem({
       TableName: TABLE_NAME,
       Item: {
         id: { S: id },
-        from: { S: body["from"] },
-        to: { S: body["to"] },
-        duration: { N: body["duration"] },
-        distance: { N: body["distance"] },
-        customer: { S: body["customer"] },
-        fare: { N: body["fare"] },
+        from: { S: String(body["from"]) },
+        to: { S: String(body["to"]) },
+        duration: { N: String(body["duration"]) },
+        distance: { N: String(body["distance"]) },
+        customer: { S: String(body["customer"]) },
+        fare: { N: String(body["fare"]) },
       },
     })
     .promise();
@@ -32,9 +32,9 @@ exports.handler = async (event) => {
   await sns
     .publish({
       TopicArn: TOPIC_ARN,
-      Message: body,
+      Message: JSON.stringify(body),
     })
     .promise();
 
-  return JSON.stringify(response.$response.data);
+  return JSON.stringify({ id });
 };
