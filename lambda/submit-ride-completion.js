@@ -38,5 +38,11 @@ exports.handler = async (event) => {
     })
     .promise();
 
-  return JSON.stringify({ id });
+  return {
+    statusCode: 201,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id }),
+  };
 };
