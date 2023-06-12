@@ -2,6 +2,7 @@ import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as sns from "aws-cdk-lib/aws-sns";
+import * as subscriptions from "aws-cdk-lib/aws-sns-subscriptions";
 
 export interface RideCompletionSubscribersProps {
   rideCompletionTopic: sns.ITopic;
@@ -26,14 +27,8 @@ export class RideCompletionSubscribers extends Construct {
       }
     );
 
-    const subscription = new sns.Subscription(
-      this,
-      "RideCompletionSubscription",
-      {
-        topic: props.rideCompletionTopic,
-        protocol: sns.SubscriptionProtocol.LAMBDA,
-        endpoint: lambdaFn.functionArn,
-      }
+    props.rideCompletionTopic.addSubscription(
+      new subscriptions.LambdaSubscription(lambdaFn)
     );
   }
 }
