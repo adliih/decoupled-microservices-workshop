@@ -5,6 +5,8 @@ const sns = new SNS();
 const dynamodb = new DynamoDB();
 
 exports.handler = async (event) => {
+  console.log(event);
+
   const { TABLE_NAME, TOPIC_ARN } = process.env;
 
   const body = JSON.parse(event.body);
