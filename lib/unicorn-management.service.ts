@@ -25,12 +25,23 @@ export class UnicornManagementService extends Construct {
       topicName: "RideCompletionTopic",
     });
 
-    new apigateway.LambdaRestApi(this, "UnicornManagement", {
-      handler: new lambda.Function(this, "SubmitRideCompletion", {
+    const submitRideCompletionLambdaFn = new lambda.Function(
+      this,
+      "SubmitRideCompletion",
+      {
         runtime: lambda.Runtime.NODEJS_16_X,
         code: lambda.Code.fromAsset("lambda"),
         handler: "submit-ride-completion.handler",
-      }),
+        environment: {
+          TOPIC_ARN: this.rideCompletionTopic.topicArn,
+        },
+      }
+    );
+
+    new apigateway.LambdaRestApi(this, "UnicornManagement", {
+      handler: submitRideCompletionLambdaFn,
     });
+
+    this.rideCompletionTopic.grantPublish(submitRideCompletionLambdaFn);
   }
 }
