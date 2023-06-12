@@ -34,6 +34,7 @@ export class UnicornManagementService extends Construct {
         handler: "submit-ride-completion.handler",
         environment: {
           TOPIC_ARN: this.rideCompletionTopic.topicArn,
+          TABLE_NAME: rideTable.tableName,
         },
       }
     );
@@ -43,5 +44,6 @@ export class UnicornManagementService extends Construct {
     });
 
     this.rideCompletionTopic.grantPublish(submitRideCompletionLambdaFn);
+    rideTable.grantReadWriteData(submitRideCompletionLambdaFn);
   }
 }
