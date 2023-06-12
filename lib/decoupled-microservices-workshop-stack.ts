@@ -1,9 +1,7 @@
 import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 import { UnicornManagementService } from "./unicorn-management.service";
-import { CustomerAccounting } from "./customer-accounting.service";
-import { CustomerNotification } from "./customer-notification.service";
-import { ExtraordinaryRide } from "./extraordinary-ride.service";
+import { RideCompletionSubscribers } from "./ride-completion-subscriber.service";
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 export class DecoupledMicroservicesWorkshopStack extends cdk.Stack {
@@ -17,9 +15,24 @@ export class DecoupledMicroservicesWorkshopStack extends cdk.Stack {
     //   visibilityTimeout: cdk.Duration.seconds(300)
     // });
 
-    new UnicornManagementService(this, "UnicornManagementService", {});
-    new CustomerNotification(this, "CustomerNotification", {});
-    new CustomerAccounting(this, "CustomerAccounting", {});
-    new ExtraordinaryRide(this, "ExtraordinaryRide", {});
+    const unicornManagementService = new UnicornManagementService(
+      this,
+      "UnicornManagementService",
+      {}
+    );
+    new RideCompletionSubscribers(this, "CustomerNotification", {
+      lambdaHandler: "customer-notification.index",
+      rideCompletionTopic: unicornManagementService.rideCompletionTopic,
+    });
+
+    new RideCompletionSubscribers(this, "CustomerAccounting", {
+      lambdaHandler: "customer-notification.index",
+      rideCompletionTopic: unicornManagementService.rideCompletionTopic,
+    });
+
+    new RideCompletionSubscribers(this, "ExtraordinaryRide", {
+      lambdaHandler: "customer-notification.index",
+      rideCompletionTopic: unicornManagementService.rideCompletionTopic,
+    });
   }
 }

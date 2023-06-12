@@ -2,11 +2,14 @@ import { Construct } from "constructs";
 import * as apigateway from "aws-cdk-lib/aws-apigateway";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
+import * as sns from "aws-cdk-lib/aws-sns";
 import { RemovalPolicy } from "aws-cdk-lib";
 
 export interface UnicornManagementServiceProps {}
 
 export class UnicornManagementService extends Construct {
+  public readonly rideCompletionTopic: sns.ITopic;
+
   constructor(scope: Construct, id: string, {}: UnicornManagementServiceProps) {
     super(scope, id);
 
@@ -16,6 +19,10 @@ export class UnicornManagementService extends Construct {
         name: "id",
         type: dynamodb.AttributeType.STRING,
       },
+    });
+
+    this.rideCompletionTopic = new sns.Topic(this, "RideCompletionTopic", {
+      topicName: "RideCompletionTopic",
     });
 
     new apigateway.LambdaRestApi(this, "UnicornManagement", {
