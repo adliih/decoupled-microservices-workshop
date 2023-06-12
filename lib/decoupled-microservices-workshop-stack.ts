@@ -21,17 +21,17 @@ export class DecoupledMicroservicesWorkshopStack extends cdk.Stack {
       {}
     );
     new RideCompletionSubscribers(this, "CustomerNotification", {
-      lambdaHandler: "customer-notification.index",
+      lambdaHandler: "customer-notification.handler",
       rideCompletionTopic: unicornManagementService.rideCompletionTopic,
     });
 
     new RideCompletionSubscribers(this, "CustomerAccounting", {
-      lambdaHandler: "customer-notification.index",
+      lambdaHandler: "customer-accounting.handler",
       rideCompletionTopic: unicornManagementService.rideCompletionTopic,
     });
 
     new RideCompletionSubscribers(this, "ExtraordinaryRide", {
-      lambdaHandler: "customer-notification.index",
+      lambdaHandler: "exxtraordinary-ride.handler",
       rideCompletionTopic: unicornManagementService.rideCompletionTopic,
     });
   }
