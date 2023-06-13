@@ -76,6 +76,7 @@ export class RideBookingService extends Construct {
     // grant permissions
     ridesBookingTable.grantReadWriteData(submitInstantRideRfq);
     ridesBookingTable.grantReadData(queryInstantRideRfq);
+    ridesBookingTable.grantReadWriteData(rfqResponseQueueHandler);
     instantRideRfqTopic.grantPublish(submitInstantRideRfq);
 
     // expose resource to external
