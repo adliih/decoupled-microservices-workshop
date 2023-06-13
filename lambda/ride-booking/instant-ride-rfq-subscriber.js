@@ -1,18 +1,17 @@
 const { SQS } = require("aws-sdk");
-import "./typedef";
 
 const sqs = new SQS();
 
-/** @param {{ Records: SnsEvent[] }} records */
+/** @param {{ Records: import("./typedef").SnsRecord[] }} records */
 exports.handler = async (records) => {
   console.log(records);
 
-  for (const event of records) {
+  for (const event of records.Records) {
     await handleSnsRecord(event);
   }
 };
 
-/** @param {SnsEvent} event */
+/** @param {import("./typedef").SnsRecord} event */
 async function handleSnsRecord(event) {
   console.log(event);
 
@@ -22,10 +21,10 @@ async function handleSnsRecord(event) {
     PROVIDER_ID: providerId,
   } = process.env;
 
-  /** @type {RfqSnsMessage} */
+  /** @type {import("./typedef").RfqSnsMessage} */
   const message = JSON.parse(event.Sns.Message);
 
-  /** @type { RfqResponseQueueMessage } */
+  /** @type { import("./typedef").RfqResponseQueueMessage } */
   const messageBody = {
     id: message.id,
     providerId,

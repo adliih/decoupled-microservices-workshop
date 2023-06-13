@@ -1,9 +1,8 @@
-import "./typedef";
 const { DynamoDB } = require("aws-sdk");
 
 const dynamodb = new DynamoDB();
 
-/** @param {SqsEvent} event */
+/** @param { import("./typedef").SqsEvent } event */
 exports.handler = async (event) => {
   console.log(event);
 
@@ -12,9 +11,9 @@ exports.handler = async (event) => {
   }
 };
 
-/** @param {SqsRecord} record */
+/** @param { import("./typedef").SqsRecord } record */
 const handleRecord = async (record) => {
-  /** @type {RfqResponseQueueMessage} */
+  /** @type {import("./typedef").RfqResponseQueueMessage} */
   const message = JSON.parse(record.body);
 
   const { TABLE_NAME: TableName } = process.env;
