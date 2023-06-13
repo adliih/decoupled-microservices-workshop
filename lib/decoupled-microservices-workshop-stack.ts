@@ -2,6 +2,7 @@ import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 import { UnicornManagementService } from "./unicorn-management.service";
 import { RideCompletionSubscribers } from "./ride-completion-subscriber.service";
+import { RideBookingStack } from "./ride-booking/ride-booking.stack";
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 export class DecoupledMicroservicesWorkshopStack extends cdk.Stack {
@@ -34,5 +35,7 @@ export class DecoupledMicroservicesWorkshopStack extends cdk.Stack {
       lambdaHandler: "exxtraordinary-ride.handler",
       rideCompletionTopic: unicornManagementService.rideCompletionTopic,
     });
+
+    new RideBookingStack(this, "RideBookingStack", {});
   }
 }
