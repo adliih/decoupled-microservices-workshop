@@ -5,6 +5,7 @@ import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
 import * as apigateway from "aws-cdk-lib/aws-apigateway";
 import * as sns from "aws-cdk-lib/aws-sns";
 import * as sqs from "aws-cdk-lib/aws-sqs";
+import { SqsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
 
 export interface RideBookingServiceProps {}
 
@@ -68,12 +69,14 @@ export class RideBookingService extends Construct {
         TABLE_NAME: ridesBookingTable.tableName,
       },
     });
+    rfqResponseQueueHandler.addEventSource(
+      new SqsEventSource(rfqResponseQueue)
+    );
 
     // grant permissions
     ridesBookingTable.grantReadWriteData(submitInstantRideRfq);
     ridesBookingTable.grantReadData(queryInstantRideRfq);
     instantRideRfqTopic.grantPublish(submitInstantRideRfq);
-    rfqResponseQueue.grantConsumeMessages(rfqResponseQueueHandler);
 
     // expose resource to external
     this.instantRideRfqTopic = instantRideRfqTopic;
