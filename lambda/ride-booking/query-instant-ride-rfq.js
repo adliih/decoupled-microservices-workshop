@@ -20,13 +20,15 @@ exports.handler = async (event) => {
   const data = await dynamodb
     .getItem({
       TableName,
-      Key: { id: { S: id } },
+      Key: DynamoDB.Converter.marshall({ id }),
     })
     .promise();
 
-  console.log(data);
+  console.log(`data`, data);
 
-  const response = { ...data.Item };
+  const response = DynamoDB.Converter.unmarshall(data.Item);
+
+  console.log(`response`, response);
 
   return {
     statusCode: 200,
