@@ -26,18 +26,22 @@ const handleRecord = async (record) => {
         id: { S: message.id },
       },
       // append the new quote into quotes field
-      UpdateExpression: `SET quotes = list_append(quotes, :quote)`,
+      UpdateExpression: `SET qoutes = list_append(qoutes, :quote)`,
       // constructing quote data
       ExpressionAttributeValues: {
         ":quote": {
-          M: {
-            providerId: {
-              S: message.providerId,
+          L: [
+            {
+              M: {
+                providerId: {
+                  S: message.providerId,
+                },
+                fare: {
+                  N: String(message.fare),
+                },
+              },
             },
-            fare: {
-              N: String(message.fare),
-            },
-          },
+          ],
         },
       },
     })
