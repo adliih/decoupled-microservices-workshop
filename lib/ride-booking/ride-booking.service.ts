@@ -35,6 +35,7 @@ export class RideBookingService extends Construct {
         handler: "submit-instant-ride-rfq.handler",
         environment: {
           TABLE_NAME: ridesBookingTable.tableName,
+          TOPIC_ARN: instantRideRfqTopic.topicArn,
         },
       }
     );
