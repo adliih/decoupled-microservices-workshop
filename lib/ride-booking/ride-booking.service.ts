@@ -56,9 +56,14 @@ export class RideBookingService extends Construct {
         },
       }
     );
-    new apigateway.LambdaRestApi(this, "QueryInstantRideRfqEndpoint", {
-      handler: queryInstantRideRfq,
-    });
+    const api = new apigateway.RestApi(this, "QueryInstantRideRfqEndpoint");
+
+    const lambdaIntegration = new apigateway.LambdaIntegration(
+      queryInstantRideRfq
+    );
+
+    // add path paramter mapping
+    api.root.addResource("{id}").addMethod("GET", lambdaIntegration);
 
     const rfqResponseQueue = new sqs.Queue(
       this,
