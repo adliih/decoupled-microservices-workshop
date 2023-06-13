@@ -19,20 +19,16 @@ export class RideBookingRfqProviderService extends Construct {
   ) {
     super(scope, id);
 
-    const lambdaFn = new lambda.Function(
-      this,
-      "InstantRideRfqSubscriberHandler",
-      {
-        runtime: lambda.Runtime.NODEJS_14_X,
-        code: lambda.Code.fromAsset("lambda/ride-booking"),
-        handler: "instant-ride-rfq-subscriber.handler",
-        environment: {
-          FARE_MULTIPLIER: String(props.fareMultiplier),
-          QUEUE_URL: props.rfqResponseQueue.queueUrl,
-          PROVIDER_ID: id,
-        },
-      }
-    );
+    const lambdaFn = new lambda.Function(this, "Handler", {
+      runtime: lambda.Runtime.NODEJS_14_X,
+      code: lambda.Code.fromAsset("lambda/ride-booking"),
+      handler: "instant-ride-rfq-subscriber.handler",
+      environment: {
+        FARE_MULTIPLIER: String(props.fareMultiplier),
+        QUEUE_URL: props.rfqResponseQueue.queueUrl,
+        PROVIDER_ID: id,
+      },
+    });
 
     // granting required permissions
     props.instantRideRfqTopic.addSubscription(

@@ -9,11 +9,7 @@ export class RideBookingStack extends Construct {
   constructor(scope: Construct, id: string, props: RideBookingStackProps) {
     super(scope, id);
 
-    const rideBookingService = new RideBookingService(
-      this,
-      "RideBookingService",
-      {}
-    );
+    const rideBookingService = new RideBookingService(this, "Service", {});
 
     new RideBookingRfqProviderService(this, "RfqProvider1", {
       fareMultiplier: 2,
