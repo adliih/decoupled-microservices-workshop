@@ -28,7 +28,8 @@ export class RideBookingRfqProviderService extends Construct {
         handler: "instant-ride-rfq-subscriber.handler",
         environment: {
           FARE_MULTIPLIER: String(props.fareMultiplier),
-          QUEUE_NAME: props.rfqResponseQueue.queueName,
+          QUEUE_URL: props.rfqResponseQueue.queueUrl,
+          PROVIDER_ID: id,
         },
       }
     );
