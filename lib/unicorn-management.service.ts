@@ -13,7 +13,7 @@ export class UnicornManagementService extends Construct {
   constructor(scope: Construct, id: string, {}: UnicornManagementServiceProps) {
     super(scope, id);
 
-    const rideTable = new dynamodb.Table(this, "Rides", {
+    const rideTable = new dynamodb.Table(this, "Table", {
       removalPolicy: RemovalPolicy.DESTROY,
       partitionKey: {
         name: "id",
@@ -21,26 +21,21 @@ export class UnicornManagementService extends Construct {
       },
     });
 
-    this.rideCompletionTopic = new sns.Topic(this, "RideCompletionTopic", {
+    this.rideCompletionTopic = new sns.Topic(this, "Topic", {
       topicName: "RideCompletionTopic",
     });
 
-    const submitRideCompletionLambdaFn = new lambda.Function(
-      this,
-      "SubmitRideCompletion",
-      {
-        reservedConcurrentExecutions: 1,
-        runtime: lambda.Runtime.NODEJS_16_X,
-        code: lambda.Code.fromAsset("lambda"),
-        handler: "submit-ride-completion.handler",
-        environment: {
-          TOPIC_ARN: this.rideCompletionTopic.topicArn,
-          TABLE_NAME: rideTable.tableName,
-        },
-      }
-    );
+    const submitRideCompletionLambdaFn = new lambda.Function(this, "Submit", {
+      runtime: lambda.Runtime.NODEJS_16_X,
+      code: lambda.Code.fromAsset("lambda"),
+      handler: "submit-ride-completion.handler",
+      environment: {
+        TOPIC_ARN: this.rideCompletionTopic.topicArn,
+        TABLE_NAME: rideTable.tableName,
+      },
+    });
 
-    new apigateway.LambdaRestApi(this, "UnicornManagement", {
+    new apigateway.LambdaRestApi(this, "RideCompleteApi", {
       handler: submitRideCompletionLambdaFn,
     });
 

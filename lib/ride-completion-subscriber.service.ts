@@ -17,16 +17,11 @@ export class RideCompletionSubscribers extends Construct {
   ) {
     super(scope, id);
 
-    const lambdaFn = new lambda.Function(
-      this,
-      "RideCompletionSubscriberHandler",
-      {
-        reservedConcurrentExecutions: 1,
-        runtime: lambda.Runtime.NODEJS_14_X,
-        code: lambda.Code.fromAsset("lambda"),
-        handler: props.lambdaHandler,
-      }
-    );
+    const lambdaFn = new lambda.Function(this, "Handler", {
+      runtime: lambda.Runtime.NODEJS_14_X,
+      code: lambda.Code.fromAsset("lambda"),
+      handler: props.lambdaHandler,
+    });
 
     props.rideCompletionTopic.addSubscription(
       new subscriptions.LambdaSubscription(lambdaFn)

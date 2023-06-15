@@ -18,7 +18,7 @@ export class DecoupledMicroservicesWorkshopStack extends cdk.Stack {
 
     const unicornManagementService = new UnicornManagementService(
       this,
-      "UnicornManagementService",
+      "RideComplete",
       {}
     );
     new RideCompletionSubscribers(this, "CustomerNotification", {
