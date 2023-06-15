@@ -21,6 +21,7 @@ export class RideCompletionSubscribers extends Construct {
       this,
       "RideCompletionSubscriberHandler",
       {
+        reservedConcurrentExecutions: 1,
         runtime: lambda.Runtime.NODEJS_14_X,
         code: lambda.Code.fromAsset("lambda"),
         handler: props.lambdaHandler,

@@ -29,6 +29,7 @@ export class UnicornManagementService extends Construct {
       this,
       "SubmitRideCompletion",
       {
+        reservedConcurrentExecutions: 1,
         runtime: lambda.Runtime.NODEJS_16_X,
         code: lambda.Code.fromAsset("lambda"),
         handler: "submit-ride-completion.handler",

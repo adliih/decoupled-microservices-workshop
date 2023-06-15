@@ -36,6 +36,7 @@ export class RideBookingService extends Construct {
         TABLE_NAME: ridesBookingTable.tableName,
         TOPIC_ARN: instantRideRfqTopic.topicArn,
       },
+      reservedConcurrentExecutions: 1,
     });
     new apigateway.LambdaRestApi(this, "SubmitRfqEndpoint", {
       handler: submitInstantRideRfq,
@@ -49,6 +50,7 @@ export class RideBookingService extends Construct {
       environment: {
         TABLE_NAME: ridesBookingTable.tableName,
       },
+      reservedConcurrentExecutions: 1,
     });
     const api = new apigateway.RestApi(this, "QueryRfqEndpoint");
 
