@@ -6,6 +6,7 @@ import * as apigateway from "aws-cdk-lib/aws-apigateway";
 import * as sns from "aws-cdk-lib/aws-sns";
 import * as sqs from "aws-cdk-lib/aws-sqs";
 import { SqsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
+import { TableViewer } from "cdk-dynamo-table-viewer";
 
 export interface RideBookingServiceProps {}
 
@@ -23,6 +24,10 @@ export class RideBookingService extends Construct {
       },
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       tableName: "RidesBookingTable",
+    });
+
+    new TableViewer(this, "TableViewer", {
+      table: ridesBookingTable,
     });
 
     const instantRideRfqTopic = new sns.Topic(this, "Topci", {});

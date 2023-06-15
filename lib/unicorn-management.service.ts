@@ -4,6 +4,7 @@ import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
 import * as sns from "aws-cdk-lib/aws-sns";
 import { RemovalPolicy } from "aws-cdk-lib";
+import { TableViewer } from "cdk-dynamo-table-viewer";
 
 export interface UnicornManagementServiceProps {}
 
@@ -19,6 +20,10 @@ export class UnicornManagementService extends Construct {
         name: "id",
         type: dynamodb.AttributeType.STRING,
       },
+    });
+
+    new TableViewer(this, "TableViewer", {
+      table: rideTable,
     });
 
     this.rideCompletionTopic = new sns.Topic(this, "Topic", {
