@@ -2,7 +2,8 @@ import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 import { UnicornManagementService } from "./unicorn-management.service";
 import { RideCompletionSubscribers } from "./ride-completion-subscriber.service";
-import { RideBookingStack } from "./ride-booking/ride-booking.stack";
+import { RideBookingService } from "./ride-booking/ride-booking.service";
+import { RideBookingRfqProviderService } from "./ride-booking/ride-booking-rfq-provider.service";
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 export class DecoupledMicroservicesWorkshopStack extends cdk.Stack {
@@ -36,6 +37,24 @@ export class DecoupledMicroservicesWorkshopStack extends cdk.Stack {
       rideCompletionTopic: unicornManagementService.rideCompletionTopic,
     });
 
-    new RideBookingStack(this, "RideBookingStack", {});
+    const rideBookingService = new RideBookingService(this, "RideBooking", {});
+
+    new RideBookingRfqProviderService(this, "RfqProvider1", {
+      fareMultiplier: 2,
+      instantRideRfqTopic: rideBookingService.instantRideRfqTopic,
+      rfqResponseQueue: rideBookingService.rfqResponseQueue,
+    });
+
+    new RideBookingRfqProviderService(this, "RfqProvider2", {
+      fareMultiplier: 3,
+      instantRideRfqTopic: rideBookingService.instantRideRfqTopic,
+      rfqResponseQueue: rideBookingService.rfqResponseQueue,
+    });
+
+    new RideBookingRfqProviderService(this, "RfqProvider3", {
+      fareMultiplier: 10,
+      instantRideRfqTopic: rideBookingService.instantRideRfqTopic,
+      rfqResponseQueue: rideBookingService.rfqResponseQueue,
+    });
   }
 }
